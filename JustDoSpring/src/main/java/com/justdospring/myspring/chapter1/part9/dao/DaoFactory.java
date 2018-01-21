@@ -3,13 +3,14 @@ package com.justdospring.myspring.chapter1.part9.dao;
 import com.justdospring.myspring.chapter1.part5.dao.ConnectionMaker;
 import com.justdospring.myspring.chapter1.part5.dao.MySQLConnectionMaker;
 import com.justdospring.myspring.chapter1.part5.dao.OracleConnectionMaker;
+import com.justdospring.myspring.chapter1.part5.dao.PostgreConnectionMaker;
 import com.justdospring.myspring.chapter1.part6.dao.UserDao;
 import com.justdospring.myspring.chapter1.part8.dao.AccountDao;
 import com.justdospring.myspring.chapter1.part8.dao.MessageDao;
 
 public class DaoFactory {
 	public UserDao userDao() {
-		return new UserDao(connectionMaker("MYSQL"));
+		return new UserDao(connectionMaker("POSTGRE"));
 	}
 
 	public AccountDao accountDao() {
@@ -27,6 +28,8 @@ public class DaoFactory {
 			connectionMaker = new MySQLConnectionMaker();
 		} else if (vender.equals("ORACLE")) {
 			connectionMaker = new OracleConnectionMaker();
+		} else if (vender.equals("POSTGRE")) {
+			connectionMaker = new PostgreConnectionMaker();
 		}
 
 		return connectionMaker;
