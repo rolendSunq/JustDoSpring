@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import com.justdospring.myspring.chapter1.part5.dao.ConnectionMaker;
 import com.justdospring.myspring.chapter1.part5.dao.MySQLConnectionMaker;
 import com.justdospring.myspring.chapter1.part5.dao.OracleConnectionMaker;
+import com.justdospring.myspring.chapter1.part5.dao.PostgreConnectionMaker;
 import com.justdospring.myspring.chapter1.part6.dao.UserDao;
 
 @Configuration
 public class DaoFactory {
 	@Bean
 	public UserDao userDao() {
-		return new UserDao(getConnectionMaker("MYSQL"));
+		return new UserDao(getConnectionMaker("POSTGRE"));
 	}
 
 	@Bean
@@ -23,6 +24,8 @@ public class DaoFactory {
 			connectionMaker = new MySQLConnectionMaker();
 		} else if (vender.equals("ORACLE")) {
 			connectionMaker = new OracleConnectionMaker();
+		} else if (vender.equals("POSTGRE")) {
+			connectionMaker = new PostgreConnectionMaker();
 		}
 
 		return connectionMaker;

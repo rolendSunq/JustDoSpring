@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
-		
+
+	<!-- context:property-placeholder location="classpath:database.properties"  /!-->
+	<context:property-placeholder location="/WEB-INF/*.properties" />
+
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+	    destroy-method="close"
+	    p:driverClassName="${db.driverClassName}"
+	    p:url="${db.url}"
+	    p:username="${db.username}"
+	    p:password="${db.password}"
+	    p:maxTotal="${db.maxTotal}"
+	    p:maxIdle="${db.maxIdle}"
+	    p:maxWaitMillis="${db.maxWaitMills}"
+	/>
 </beans>
