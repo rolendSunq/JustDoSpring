@@ -13,12 +13,12 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
 	    destroy-method="close"
-	    p:driverClassName="${db.driverClassName}"
-	    p:url="${db.url}"
-	    p:username="${db.username}"
-	    p:password="${db.password}"
-	    p:maxTotal="${db.maxTotal}"
-	    p:maxIdle="${db.maxIdle}"
-	    p:maxWaitMillis="${db.maxWaitMills}"
+	    p:driverClassName="${postgre.driverClassName}"
+	    p:url="${postgre.url}"
+	    p:username="${postgre.username}"
+	    p:password="${postgre.password}"
+	    p:maxTotal="${postgre.maxTotal}"
+	    p:maxIdle="${postgre.maxIdle}"
+	    p:maxWaitMillis="${postgre.maxWaitMills}"
 	/>
 </beans>
