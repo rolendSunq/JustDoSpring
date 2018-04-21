@@ -1,4 +1,4 @@
-package com.justdospring.myspring.ch02.part1.junit_userdao;
+package com.justdospring.myspring.ch02.part3.junit_addmethod;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -14,9 +14,13 @@ import com.justdospring.myspring.chapter1.domain.User;
 public class UserDaoTest {
 	@Test
 	public void addAndGet() throws SQLException, ClassNotFoundException {
-		ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+		ApplicationContext context = new GenericXmlApplicationContext("applicationContext2.xml");
 		
 		UserDao dao = context.getBean("userDao", UserDao.class);
+		
+		dao.deleteAll();
+		assertThat(dao.getCount(), equalTo(0));
+		
 		User user = new User();
 		
 		user.setId("childrenOfGrave");
@@ -31,4 +35,5 @@ public class UserDaoTest {
 		assertThat(findUser.getName(), equalTo(user.getName()));
 		assertThat(findUser.getPassword(), equalTo(user.getPassword()));
 	}
+	
 }
