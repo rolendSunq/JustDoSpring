@@ -1,4 +1,4 @@
-package com.justdospring.myspring.chapter1.part13.datasource_convert;
+package com.justdospring.myspring.ch02.part1.junit_userdao;
 
 import javax.sql.DataSource;
 

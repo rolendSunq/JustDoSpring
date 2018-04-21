@@ -1,4 +1,4 @@
-package com.justdospring.myspring.chapter1.part13.datasource_convert;
+package com.justdospring.myspring.chapter2.part1.userdaotest;
 
 import javax.sql.DataSource;
 

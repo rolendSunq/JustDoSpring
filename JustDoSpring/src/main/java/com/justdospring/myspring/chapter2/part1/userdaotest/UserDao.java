@@ -1,4 +1,4 @@
-package com.justdospring.myspring.chapter1.part13.datasource_convert;
+package com.justdospring.myspring.chapter2.part1.userdaotest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,24 +12,17 @@ import com.justdospring.myspring.chapter1.domain.User;
 public class UserDao {
 	private DataSource dataSource;
 	
-	public UserDao() {
-		// empty
-	}
-	
-	public UserDao(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-	
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		Connection connection = dataSource.getConnection();
-		PreparedStatement ps = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
+		PreparedStatement ps = connection.prepareStatement("insert into users(id, name, password, email, exp_date) values(?, ?, ?, ?, sysdate())");
 		ps.setString(1, user.getId());
 		ps.setString(2, user.getName());
 		ps.setString(3, user.getPassword());
+		ps.setString(4, user.getEmail());
 
 		ps.executeUpdate();
 
