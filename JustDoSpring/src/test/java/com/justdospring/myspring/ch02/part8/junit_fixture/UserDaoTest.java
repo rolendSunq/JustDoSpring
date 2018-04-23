@@ -1,4 +1,4 @@
-package com.justdospring.myspring.ch02.part7.junit_before;
+package com.justdospring.myspring.ch02.part8.junit_fixture;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -14,11 +14,17 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 public class UserDaoTest {
 	private UserDao dao;
+	private User user1;
+	private User user2;
+	private User user3;
 	
 	@Before
 	public void setUp() {
-		ApplicationContext context = new GenericXmlApplicationContext("applicationContext6.xml");
+		ApplicationContext context = new GenericXmlApplicationContext("applicationContext7.xml");
 		dao = context.getBean("userDao", UserDao.class);
+		user1 = new User("oldBoy", "박성용", "parkCastle", "oldBoyPark@naver.com");
+		user2 = new User("neonKnight", "김기사", "nightKing", "neonKnight@naver.com");
+		user3 = new User("paranoid", "이신경", "paranoid801", "paranoid801@naver.com");
 	}
 	
 	@Test
@@ -26,10 +32,6 @@ public class UserDaoTest {
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), equalTo(0));
-		
-		User user1 = new User("oldBoy", "박성용", "parkCastle", "oldBoyPark@naver.com");
-		User user2 = new User("neonKnight", "김기사", "nightKing", "neonKnight@naver.com");
-		User user3 = new User("paranoid", "이신경", "paranoid801", "paranoid801@naver.com");
 		
 		dao.add(user1);
 		dao.add(user2);
