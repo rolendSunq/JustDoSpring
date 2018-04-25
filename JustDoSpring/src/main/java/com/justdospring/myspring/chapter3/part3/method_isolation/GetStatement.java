@@ -11,7 +11,6 @@ import com.justdospring.myspring.domain.User;
 
 public class GetStatement implements StatementStrategy {
 	private User user;
-	private User resultUser;
 	
 	public GetStatement(User user) {
 		this.user = user;
@@ -19,29 +18,34 @@ public class GetStatement implements StatementStrategy {
 
 	@Override
 	public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
-		PreparedStatement ps = connection.prepareStatement("select * from public_user where id = ?");
+		ResultSet resultSet 	= null;
+		User tmpUser 			= null;
+		PreparedStatement ps 	= connection.prepareStatement("select * from public_user where id = ?");
 		ps.setString(1, user.getId());
-
-		ResultSet resultSet = ps.executeQuery();
-		
-		User resultUser = null;
-		if (resultSet.next()) {
-			resultUser = new User();
-			resultUser.setId(resultSet.getString("id"));
-			resultUser.setName(resultSet.getString("name"));
-			resultUser.setPassword(resultSet.getString("password"));
-			resultUser.setEmail(resultSet.getString("email"));
-		}
-		
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				// empty
+		try {
+			resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				tmpUser = new User();
+				tmpUser.setId(resultSet.getString("id"));
+				tmpUser.setName(resultSet.getString("name"));
+				tmpUser.setPassword(resultSet.getString("password"));
+				tmpUser.setEmail(resultSet.getString("email"));
+				user = tmpUser;
 			}
+		} catch(SQLException e) {
+			throw e;
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					// empty
+				}
+			}
+			
 		}
 		
-		if (resultUser == null) {
+		if (tmpUser == null) {
 			throw new EmptyResultDataAccessException(1);
 		}
 		
@@ -49,7 +53,7 @@ public class GetStatement implements StatementStrategy {
 	}
 	
 	public User getUser() {
-		return resultUser;
+		return user;
 	}
 
 }

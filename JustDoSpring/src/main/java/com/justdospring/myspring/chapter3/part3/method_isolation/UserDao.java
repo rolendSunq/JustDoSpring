@@ -27,7 +27,7 @@ public class UserDao {
 		paramUser.setId(id);
 		statementStrategy = new GetStatement(paramUser);
 		jdbcContextWithStatementStrategy(statementStrategy);
-
+		
 		return ((GetStatement) statementStrategy).getUser();
 	}
 	

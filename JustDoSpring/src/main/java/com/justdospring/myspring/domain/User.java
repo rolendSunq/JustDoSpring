@@ -1,20 +1,20 @@
 package com.justdospring.myspring.domain;
 
 public class User {
-	String id;
-	String name;
-	String password;
-	String email;
+	private String id;
+	private String name;
+	private String password;
+	private String email;
 	
 	public User() {
 		// empty
 	}
 	
 	public User(String id, String name, String password, String email) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		this.email = email;
+		this.id 		= id;
+		this.name 		= name;
+		this.password 	= password;
+		this.email 		= email;
 	}
 	
 	public String getId() {
