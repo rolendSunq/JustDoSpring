@@ -1,4 +1,4 @@
-package com.justdospring.myspring.ch02.part10.junit_dirtiescontext;
+package com.justdospring.myspring.ch02.part11.junit_notcontainer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -22,7 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("applicationContext9.xml")
+@ContextConfiguration("/test-applicationContext.xml")
 @DirtiesContext
 public class UserDaoTest {
 	@Autowired
@@ -36,8 +36,6 @@ public class UserDaoTest {
 	
 	@Before
 	public void setUp() {
-		DataSource dataSource = new SingleConnectionDataSource("jdbc:postgresql://localhost:5455/myTestGres", "postgres", "gre1234", true);
-		dao.setDataSource(dataSource);
 		dao = context.getBean("userDao", UserDao.class);
 		
 		user1 = new User("oldBoy", "박성용", "parkCastle", "oldBoyPark@naver.com");
