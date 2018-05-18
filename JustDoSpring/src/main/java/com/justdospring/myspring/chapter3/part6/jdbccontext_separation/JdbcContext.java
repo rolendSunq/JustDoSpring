@@ -1,4 +1,4 @@
-package com.justdospring.myspring.chapter3.part5.anonymous_inner_class;
+package com.justdospring.myspring.chapter3.part6.jdbccontext_separation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,27 +8,26 @@ import javax.sql.DataSource;
 
 public class JdbcContext {
 	private DataSource dataSource;
-	
+
 	// DataSource type bean을 DI 받을 수 있게 준비해둔다.
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 	
-	// JdbcContext 클래스 안으로 이동하였으므로 메소드 명을 변경했다.
 	public void workWithStatementStrategy(StatementStrategy statementStrategy) throws SQLException{
 		Connection connection 				= null;
-		PreparedStatement preparedSatement 	= null;
+		PreparedStatement preparedStatement = null;
 		
 		try {
-			connection 			= dataSource.getConnection();
-			preparedSatement 	= statementStrategy.makePreparedStatement(connection);
-		} catch(SQLException e) {
-			throw e;
+			connection = dataSource.getConnection();
+			preparedStatement = statementStrategy.makePreparedStatement(connection);
+		} catch(SQLException sqle) {
+			throw sqle;
 		} finally {
-			if (preparedSatement != null) {
+			if (preparedStatement != null) {
 				try {
-					preparedSatement.close();
-				} catch(SQLException e) {
+					preparedStatement.close();
+				} catch (SQLException e) {
 					// empty
 				}
 			}
@@ -36,7 +35,7 @@ public class JdbcContext {
 			if (connection != null) {
 				try {
 					connection.close();
-				} catch(SQLException e) {
+				} catch (SQLException e) {
 					// empty
 				}
 			}

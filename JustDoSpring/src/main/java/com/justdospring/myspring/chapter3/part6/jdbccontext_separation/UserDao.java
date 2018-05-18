@@ -1,4 +1,4 @@
-package com.justdospring.myspring.chapter3.part5.anonymous_inner_class;
+package com.justdospring.myspring.chapter3.part6.jdbccontext_separation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,11 +13,12 @@ import com.justdospring.myspring.domain.User;
 
 
 public class UserDao {
+	@SuppressWarnings("unused")
 	private DataSource dataSource;
 	
-	@SuppressWarnings("unused")
 	private JdbcContext jdbcContext;
 	
+	// JdbcContext를 DI 받도록 만든다.
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -28,7 +29,7 @@ public class UserDao {
 
 	public void add(User user) throws ClassNotFoundException, SQLException {
 		
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		jdbcContext.workWithStatementStrategy(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement("insert into public_user(id, name, password, email, reg_date) values(?, ?, ?, ?, current_timestamp)");
@@ -57,18 +58,16 @@ public class UserDao {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
 				ResultSet resultSet 	= null;
-				User tmpUser 			= null;
 				PreparedStatement ps 	= connection.prepareStatement("select * from public_user where id = ?");
-				ps.setString(1, user.getId());
+				ps.setString(1, paramUser.getId());
+				
 				try {
 					resultSet = ps.executeQuery();
 					if (resultSet.next()) {
-						tmpUser = new User();
-						tmpUser.setId(resultSet.getString("id"));
-						tmpUser.setName(resultSet.getString("name"));
-						tmpUser.setPassword(resultSet.getString("password"));
-						tmpUser.setEmail(resultSet.getString("email"));
-						user = tmpUser;
+						paramUser.setId(resultSet.getString("id"));
+						paramUser.setName(resultSet.getString("name"));
+						paramUser.setPassword(resultSet.getString("password"));
+						paramUser.setEmail(resultSet.getString("email"));
 					}
 				} catch(SQLException e) {
 					throw e;
@@ -83,7 +82,7 @@ public class UserDao {
 					
 				}
 				
-				if (tmpUser == null) {
+				if (user == null) {
 					throw new EmptyResultDataAccessException(1);
 				}
 				
@@ -97,7 +96,7 @@ public class UserDao {
 		}
 		
 		StatementStrategy statementStrategy = new GetStatement(paramUser);
-		jdbcContextWithStatementStrategy(statementStrategy);
+		jdbcContext.workWithStatementStrategy(statementStrategy);
 		
 		return ((GetStatement) statementStrategy).getUser();
 	}
@@ -116,7 +115,7 @@ public class UserDao {
 		}
 		
 		StatementStrategy statementStrategy = new DeleteAllStatement();
-		jdbcContextWithStatementStrategy(statementStrategy);
+		jdbcContext.workWithStatementStrategy(statementStrategy);
 	}
 	
 	public int getCount() throws SQLException{
@@ -154,37 +153,8 @@ public class UserDao {
 		}
 		
 		StatementStrategy statementStrategy = new GetCountStatement();
-		jdbcContextWithStatementStrategy(statementStrategy);
+		jdbcContext.workWithStatementStrategy(statementStrategy);
 		return ((GetCountStatement) statementStrategy).getCount();
 	}
 	
-	private void jdbcContextWithStatementStrategy(StatementStrategy statementStrategy) throws SQLException{
-		Connection connection 	= null;
-		PreparedStatement ps	= null;
-		
-		try {
-			connection 	= dataSource.getConnection();
-			ps			= statementStrategy.makePreparedStatement(connection);
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			// PreparedStatement close
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					// empty --> close 예외설정 미정의
-				}
-			}
-			
-			// Connection close
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					// empty --> close 예외설정 미정의
-				}
-			}
-		}
-	}
 }
